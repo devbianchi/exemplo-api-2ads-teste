@@ -3,8 +3,14 @@ import path from "node:path";
 
 const dbPath = path.resolve(__dirname, "../../database.db");
 
-// Inicialização nativa e síncrona
-export const db = new DatabaseSync(dbPath);
+let db: DatabaseSync;
 
-// Ativando foreign keys na API nativa
-db.exec("PRAGMA foreign_keys = ON;");
+try {
+  db = new DatabaseSync(dbPath);
+  db.exec("PRAGMA foreign_keys = ON;");
+} catch (err) {
+  console.error("Erro ao conectar ao banco:", err);
+  process.exit(1);
+}
+
+export { db };
